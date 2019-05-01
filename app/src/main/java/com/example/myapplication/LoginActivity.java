@@ -13,6 +13,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         final EditText loginUsername = findViewById(R.id.loginUsername);
         final EditText loginPassword = findViewById(R.id.loginPassword);
         Button btnlogin =findViewById(R.id.btnlogin);
@@ -25,9 +26,11 @@ public class LoginActivity extends AppCompatActivity {
                 String databaseUserpassword = sharedPreferences.getString(
                         "keypassword"+loginUsername.getText().toString(),"");
                 if(databaseUserpassword.equals(loginPassword))
-                    Toast.makeText(LoginActivity.this,"Logged in successfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,
+                            "Logged in successfully",Toast.LENGTH_SHORT).show();
                 if (databaseUsername.isEmpty())
-                    Toast.makeText(LoginActivity.this,"User not registered",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,
+                            "User not registered",Toast.LENGTH_SHORT).show();
             }
         });
     }

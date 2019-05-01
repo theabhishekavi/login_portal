@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText etPassword = findViewById(R.id.etPassword);
         final EditText etRePassword = findViewById(R.id.etRePassword);
         Button btnOk = findViewById(R.id.btnOk);
+        Button btnLog = findViewById(R.id.btnlog);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
+            }
+        });
+        btnLog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
     }
