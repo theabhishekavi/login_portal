@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
     <TextView
         android:paddingTop="10dp"
@@ -14,14 +13,14 @@
         android:layout_height="wrap_content"
         android:text="REGISTER"
         android:textStyle="bold"
-        android:textSize="16sp"
-        />
+        android:textSize="16sp" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name:-"/>
         <EditText
             android:id="@+id/etName"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your name"/>
@@ -37,6 +36,7 @@
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="Create your username" />
 
 
@@ -57,16 +57,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter your password"
-                android:inputType="textPassword"/>
+                android:inputType="numberPassword"/>
         </android.support.design.widget.TextInputLayout>
 
-
-
-        <!--<EditText-->
-            <!--android:id="@+id/etPassword"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:hint="Create your password" />-->
 
 
         <TextView
@@ -86,31 +79,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter your password"
-                android:inputType="textPassword"/>
+                android:inputType="numberPassword"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!--<EditText-->
-            <!--android:id="@+id/etRePassword"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:hint="Re-enter your password" />-->
+
 
     <Button
         android:id="@+id/btnOk"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="OK"/>
-
-    <Button
-        android:id="@+id/btnlog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="go to login"/>
-
-
-
 
 
 </LinearLayout>
