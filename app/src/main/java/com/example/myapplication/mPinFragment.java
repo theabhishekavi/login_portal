@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -8,17 +9,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class mPinFragment extends Fragment {
     int counter = 0;
     long startTime = SystemClock.elapsedRealtime();
     TextView timelapse,cordinates;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -126,6 +131,7 @@ public class mPinFragment extends Fragment {
 //            }
 //        });
 
+
         btn1.setOnTouchListener(handleTouch);
         btn2.setOnTouchListener(handleTouch);
         btn3.setOnTouchListener(handleTouch);
@@ -148,12 +154,16 @@ public class mPinFragment extends Fragment {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int x = (int)event.getRawX();
                 int y = (int)event.getRawY();
+//                int k = getResources().getConfiguration().orientation;
+//                int l =((WindowManager) getContext().getSystemService(getContext().WINDOW_SERVICE)).getDefaultDisplay().getOrientation();
+//               Toast.makeText(getContext(),"size is "+event.getSize(0),
+//                       Toast.LENGTH_SHORT).show();
                 cordinates.setText("Cordinates are x:"+x+" and y:"+y);
-                long difference = (SystemClock.elapsedRealtime()-startTime)/1000;
+                long difference = (SystemClock.elapsedRealtime()-startTime);
                 if(counter == 0)
                     timelapse.setText("Time counter started");
                 else
-                    timelapse.setText("Time elapsed "+difference+"seconds");
+                    timelapse.setText("Time elapsed "+difference+" milliseconds");
                 startTime = SystemClock.elapsedRealtime();
                 counter++;
             }
