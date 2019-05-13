@@ -17,6 +17,7 @@
     android:rowCount="6">
 
     <Button
+        android:id="@+id/btnpin1"
         android:layout_width="50dp"/>
     <Button android:layout_width="50dp"
         />
@@ -37,6 +38,7 @@
 
 
     <GridLayout
+        android:id="@+id/glBtnNo"
         android:useDefaultMargins="true"
         android:paddingTop="10dp"
         android:layout_gravity="center"
@@ -90,7 +92,18 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cordinates" />
+        android:id="@+id/cordinates"
+        android:paddingBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/area"
+        android:paddingBottom="10dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/orientation"/>
+
 
     <TextView
         android:paddingTop="10dp"
