@@ -27,6 +27,7 @@ import android.widget.Toast;
         final EditText etUsername = findViewById(R.id.etUsername);
         final EditText etPassword = findViewById(R.id.etPassword);
         final EditText etRePassword = findViewById(R.id.etRePassword);
+        final EditText etmPin = findViewById(R.id.etmPin);
         Button btnOk = findViewById(R.id.btnOk);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +38,10 @@ import android.widget.Toast;
                         etPassword.getText().toString().isEmpty() ||
                         etRePassword.getText().toString().isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Enter the details",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else if (etmPin.getText().toString().length()!= 6){
+                    Toast.makeText(RegisterActivity.this,"mPin must be of 6 digits",
                             Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -60,6 +65,7 @@ import android.widget.Toast;
                                     etUsername.getText().toString());
                             editor.putString("keypassword" + etUsername.getText().toString(),
                                     etPassword.getText().toString());
+                            editor.putString("mPinPassword",etmPin.getText().toString());
                             editor.apply();
                         }
                     }

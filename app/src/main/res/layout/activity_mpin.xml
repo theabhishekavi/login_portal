@@ -13,7 +13,7 @@
     android:orientation="horizontal"
     android:useDefaultMargins="true"
     android:rowCount="6"
-        android:paddingBottom="20dp">
+        android:paddingBottom="30dp">
 
     <Button
         android:background="@drawable/boxborder"

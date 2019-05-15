@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.hardware.Sensor;
@@ -281,8 +282,17 @@ public class mPinFragment extends Fragment implements SensorEventListener {
             counter = 0;
             String password = temp1+temp2+temp3+ temp4+temp5+temp6;
             Log.e("passwordd", "pass is "+password);
-            Toast.makeText(getContext(),"Password entered is "+password,
-                    Toast.LENGTH_SHORT).show();
+
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
+            String databasemPinPassword = sharedPreferences.getString(
+                    "mPinPassword", "");
+            if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
+                startActivity(new Intent(getContext(),DummyPage.class));
+            }
+            else
+                Toast.makeText(getContext(),"Wrong mPin! Please try again",
+                        Toast.LENGTH_SHORT).show();
+
         }
 
 
