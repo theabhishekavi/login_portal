@@ -10,12 +10,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +28,7 @@ import android.widget.Toast;
 
 
 public class mPinFragment extends Fragment implements SensorEventListener {
-    int counter = 0;
+    int counter = 0,timecounter =0;
     long startTime = SystemClock.elapsedRealtime();
     TextView timelapse, cordinates, area, tvorientation;
 
@@ -35,6 +37,9 @@ public class mPinFragment extends Fragment implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private float orientationX, orientationY, orientationZ;
+
+    private String text = "";
+    Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
 
 
     @Nullable
@@ -58,6 +63,14 @@ public class mPinFragment extends Fragment implements SensorEventListener {
         final Button btn0 = getView().findViewById(R.id.btn0);
         final Button btnclr = getView().findViewById(R.id.btnclr);
         final Button btnenter = getView().findViewById(R.id.btnenter);
+
+         btnpin1 = getView().findViewById(R.id.btnpin1);
+         btnpin2 = getView().findViewById(R.id.btnpin2);
+         btnpin3 = getView().findViewById(R.id.btnpin3);
+         btnpin4 = getView().findViewById(R.id.btnpin4);
+         btnpin5 = getView().findViewById(R.id.btnpin5);
+         btnpin6 = getView().findViewById(R.id.btnpin6);
+
         final TextView tvNewUser = getView().findViewById(R.id.tvNewUser);
 
         area = getView().findViewById(R.id.area);
@@ -91,10 +104,6 @@ public class mPinFragment extends Fragment implements SensorEventListener {
         }
 
 
-
-
-
-
         try {
             mSensorManager = (SensorManager) getContext()
                     .getSystemService(Activity.SENSOR_SERVICE);
@@ -109,61 +118,74 @@ public class mPinFragment extends Fragment implements SensorEventListener {
 //        btn1.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                Log.e("counterr", "counter is "+counter);
+//                text = "1";
+//                setValue("1");
 //            }
 //        });
 //        btn2.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                Log.e("counterr", "counter is "+counter);
+//                text = "2";
+//                setValue("2");
 //            }
 //        });
 //        btn3.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                Log.e("counterr", "counter is "+counter);
+//                text = "3";
+//                setValue("3");
 //            }
 //        });
 //        btn4.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text ="4";
+//                setValue("4");
 //            }
 //        });
 //        btn5.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text ="5";
+//                setValue("5");
 //            }
 //        });
 //        btn6.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text = "6";
+//                setValue("6");
 //            }
 //        });
 //        btn7.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text = "7";
+//                setValue("7");
 //            }
 //        });
 //        btn8.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text = "8";
+//                setValue("8");
 //            }
 //        });
 //        btn9.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text = "9";
+//                setValue("9");
 //            }
 //        });
 //        btn0.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//
+//                text = "0";
+//                setValue("0");
 //            }
 //        });
 //        btnclr.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +200,9 @@ public class mPinFragment extends Fragment implements SensorEventListener {
 //
 //            }
 //        });
+
+
+
 
 
         btn1.setOnTouchListener(handleTouch);
@@ -197,6 +222,47 @@ public class mPinFragment extends Fragment implements SensorEventListener {
 
     }
 
+    public void setValue(String text){
+        if (counter == 0)
+            btnpin1.setText(text);
+        if (counter == 1)
+            btnpin2.setText(text);
+        if (counter == 2)
+            btnpin3.setText(text);
+        if (counter == 3)
+            btnpin4.setText(text);
+        if (counter == 4)
+            btnpin5.setText(text);
+        if (counter == 5)
+            btnpin6.setText(text);
+    }
+
+    public void takeValue(View v){
+
+        if(v.getId() == R.id.btn0)
+            setValue("0");
+        if(v.getId() == R.id.btn1)
+            setValue("1");
+        if(v.getId() == R.id.btn2)
+            setValue("2");
+        if(v.getId() == R.id.btn3)
+            setValue("3");
+        if(v.getId() == R.id.btn4)
+            setValue("4");
+        if(v.getId() == R.id.btn5)
+            setValue("5");
+        if(v.getId() == R.id.btn6)
+            setValue("6");
+        if(v.getId() == R.id.btn7)
+            setValue("7");
+        if(v.getId() == R.id.btn8)
+            setValue("8");
+        if(v.getId() == R.id.btn9)
+            setValue("9");
+        if (v.getId() == R.id.btnclr)
+            counter= counter - 1;
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -208,18 +274,27 @@ public class mPinFragment extends Fragment implements SensorEventListener {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int x = (int)event.getRawX();
                 int y = (int)event.getRawY();
+                Log.e("counterr", "counter is "+counter);
+
+                takeValue(v);
 
                 tvorientation.setText("Orientation x : "+orientationX+" y : "+orientationY
                 +" z : "+orientationZ);
                 area.setText("size is "+event.getSize(0));
-
                 cordinates.setText("Cordinates are x:"+x+" and y:"+y);
                 long difference = (SystemClock.elapsedRealtime()-startTime);
-                if(counter == 0)
+                if(timecounter == 0) {
                     timelapse.setText("Time counter started");
+                    timecounter++;
+                }
                 else
                     timelapse.setText("Time elapsed "+difference+" milliseconds");
+
                 startTime = SystemClock.elapsedRealtime();
+
+
+
+                if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
             }
             return true;

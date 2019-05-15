@@ -8,30 +8,37 @@
 
 
     <GridLayout
-    android:background="@drawable/boxborder"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-      android:useDefaultMargins="true"
-    android:rowCount="6">
+    android:useDefaultMargins="true"
+    android:rowCount="6"
+        android:paddingBottom="20dp">
 
     <Button
+        android:background="@drawable/boxborder"
         android:id="@+id/btnpin1"
         android:layout_width="50dp"/>
-    <Button android:layout_width="50dp"
-        />
     <Button
-        android:layout_width="50dp"
-       />
+        android:id="@+id/btnpin2"
+        android:background="@drawable/boxborder"
+        android:layout_width="50dp" />
     <Button
-        android:layout_width="50dp"
-        />
+        android:id="@+id/btnpin3"
+        android:background="@drawable/boxborder"
+        android:layout_width="50dp" />
     <Button
-        android:layout_width="50dp"
-       />
+        android:id="@+id/btnpin4"
+        android:background="@drawable/boxborder"
+        android:layout_width="50dp" />
     <Button
-        android:layout_width="50dp"
-      />
+        android:id="@+id/btnpin5"
+        android:background="@drawable/boxborder"
+        android:layout_width="50dp" />
+    <Button
+        android:id="@+id/btnpin6"
+        android:background="@drawable/boxborder"
+        android:layout_width="50dp" />
 
   </GridLayout>
 
