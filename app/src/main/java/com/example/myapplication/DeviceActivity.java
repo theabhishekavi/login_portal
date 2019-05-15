@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -12,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.TextView;
 
 public class DeviceActivity extends AppCompatActivity {
@@ -57,9 +55,8 @@ public class DeviceActivity extends AppCompatActivity {
 
         macAddress = wifiInfo.getMacAddress();
         wifiId = "";
-        if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
-            wifiId = wifiInfo.getSSID();
-        }
+        wifiId = wifiInfo.getSSID();
+
 
 
         tvImei.setText(" IMEI number is "+IMEI +
@@ -67,7 +64,8 @@ public class DeviceActivity extends AppCompatActivity {
                 "\n IMSI is"+IMSI +
                 "\n Operator name is "+operatorName+
                 "\n Mac Address is "+macAddress+
-                "\n Model number is " +model);
+                "\n Model number is " +model+
+                "\n Wifi Id is " +wifiId);
 
     }
 }

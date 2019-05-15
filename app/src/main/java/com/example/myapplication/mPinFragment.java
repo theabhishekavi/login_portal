@@ -38,8 +38,9 @@ public class mPinFragment extends Fragment implements SensorEventListener {
     private Sensor mAccelerometer;
     private float orientationX, orientationY, orientationZ;
 
-    private String text = "";
     Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
+
+    String temp1,temp2,temp3,temp4,temp5,temp6;
 
 
     @Nullable
@@ -89,16 +90,12 @@ public class mPinFragment extends Fragment implements SensorEventListener {
 
 
         if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-           ActivityCompat.requestPermissions(getActivity(),
-                   new String[]{Manifest.permission.READ_PHONE_STATE},
+                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(),
+                   new String[]{Manifest.permission.READ_PHONE_STATE,
+                           Manifest.permission.ACCESS_FINE_LOCATION},
                    123);
 
         }
@@ -223,18 +220,30 @@ public class mPinFragment extends Fragment implements SensorEventListener {
     }
 
     public void setValue(String text){
-        if (counter == 0)
-            btnpin1.setText(text);
-        if (counter == 1)
-            btnpin2.setText(text);
-        if (counter == 2)
-            btnpin3.setText(text);
-        if (counter == 3)
-            btnpin4.setText(text);
-        if (counter == 4)
-            btnpin5.setText(text);
-        if (counter == 5)
-            btnpin6.setText(text);
+        if (counter == 0) {
+            temp1 = text;
+            btnpin1.setText("*");
+        }
+        if (counter == 1){
+            temp2 = text;
+            btnpin2.setText("*");
+        }
+        if (counter == 2){
+            temp3 = text;
+            btnpin3.setText("*");
+        }
+        if (counter == 3){
+            temp4 =text;
+            btnpin4.setText("*");
+        }
+        if (counter == 4) {
+            temp5 = text;
+            btnpin5.setText("*");
+        }
+        if (counter == 5){
+            temp6 = text;
+            btnpin6.setText("*");
+        }
     }
 
     public void takeValue(View v){
@@ -259,8 +268,23 @@ public class mPinFragment extends Fragment implements SensorEventListener {
             setValue("8");
         if(v.getId() == R.id.btn9)
             setValue("9");
-        if (v.getId() == R.id.btnclr)
-            counter= counter - 1;
+        if(v.getId() == R.id.btnclr){
+            counter = 0;
+            btnpin1.setText("");
+            btnpin2.setText("");
+            btnpin3.setText("");
+            btnpin4.setText("");
+            btnpin5.setText("");
+            btnpin6.setText("");
+        }
+        if (v.getId() == R.id.btnenter) {
+            counter = 0;
+            String password = temp1+temp2+temp3+ temp4+temp5+temp6;
+            Log.e("passwordd", "pass is "+password);
+            Toast.makeText(getContext(),"Password entered is "+password,
+                    Toast.LENGTH_SHORT).show();
+        }
+
 
     }
     @Override
@@ -296,6 +320,16 @@ public class mPinFragment extends Fragment implements SensorEventListener {
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
+
+                if(v.getId() == R.id.btnclr){
+                    btnpin1.setText("");
+                    btnpin2.setText("");
+                    btnpin3.setText("");
+                    btnpin4.setText("");
+                    btnpin5.setText("");
+                    btnpin6.setText("");
+                }
+
             }
             return true;
         }

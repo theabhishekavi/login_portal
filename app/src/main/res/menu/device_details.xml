@@ -5,6 +5,6 @@
     <item
         android:title="Device Detail"
         android:id="@+id/deviceDetail"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
 </menu>
