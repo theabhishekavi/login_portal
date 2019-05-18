@@ -13,6 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DeviceActivity extends AppCompatActivity {
 
 
@@ -67,5 +71,24 @@ public class DeviceActivity extends AppCompatActivity {
                 "\n Model number is " +model+
                 "\n Wifi Id is " +wifiId);
 
+        try {
+        JSONObject deviceObject = new JSONObject();
+        JSONArray deviceArray = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("IMEI", "" + IMEI);
+            object.put("SIM",""+SimNo);
+            object.put("IMSI",""+IMSI);
+            object.put("OPERATOR",""+operatorName);
+            object.put("MAC",""+macAddress);
+            object.put("MODEL",""+model);
+            object.put("WIFI",""+wifiId);
+
+        deviceArray.put(object);
+        deviceObject.put("device_detail",deviceArray);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

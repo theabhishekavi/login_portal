@@ -112,11 +112,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
             Toast.makeText(getContext(), "Hardware compatibility issue", Toast.LENGTH_LONG).show();
         }
 
-
-
-
-
-
         btn1.setOnTouchListener(handleTouch);
         btn2.setOnTouchListener(handleTouch);
         btn3.setOnTouchListener(handleTouch);
@@ -227,10 +222,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         super.onStart();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
     View.OnTouchListener handleTouch = new View.OnTouchListener() {
         @Override
@@ -256,12 +247,9 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                 startTime = SystemClock.elapsedRealtime();
 
-
                 if (counter == 5){
                     enterField();
                 }
-
-
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
