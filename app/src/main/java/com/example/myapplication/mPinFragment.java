@@ -11,7 +11,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -28,7 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class mPinFragment extends Fragment implements SensorEventListener {
+public class mPinFragment extends Fragment implements SensorEventListener,PagerInterface {
     int counter = 0,timecounter =0;
     long startTime = SystemClock.elapsedRealtime();
     TextView timelapse, cordinates, area, tvorientation;
@@ -113,91 +112,6 @@ public class mPinFragment extends Fragment implements SensorEventListener {
             Toast.makeText(getContext(), "Hardware compatibility issue", Toast.LENGTH_LONG).show();
         }
 
-//        btn1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e("counterr", "counter is "+counter);
-//                text = "1";
-//                setValue("1");
-//            }
-//        });
-//        btn2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e("counterr", "counter is "+counter);
-//                text = "2";
-//                setValue("2");
-//            }
-//        });
-//        btn3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.e("counterr", "counter is "+counter);
-//                text = "3";
-//                setValue("3");
-//            }
-//        });
-//        btn4.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text ="4";
-//                setValue("4");
-//            }
-//        });
-//        btn5.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text ="5";
-//                setValue("5");
-//            }
-//        });
-//        btn6.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text = "6";
-//                setValue("6");
-//            }
-//        });
-//        btn7.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text = "7";
-//                setValue("7");
-//            }
-//        });
-//        btn8.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text = "8";
-//                setValue("8");
-//            }
-//        });
-//        btn9.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text = "9";
-//                setValue("9");
-//            }
-//        });
-//        btn0.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                text = "0";
-//                setValue("0");
-//            }
-//        });
-//        btnclr.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//        btnenter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
 
 
@@ -246,6 +160,30 @@ public class mPinFragment extends Fragment implements SensorEventListener {
             btnpin6.setText("*");
         }
     }
+    public void clearText(){
+        counter = 0;
+        btnpin1.setText("");
+        btnpin2.setText("");
+        btnpin3.setText("");
+        btnpin4.setText("");
+        btnpin5.setText("");
+        btnpin6.setText("");
+    }
+    public void enterField(){
+        counter = 0;
+        String password = temp1+temp2+temp3+ temp4+temp5+temp6;
+        Log.e("passwordd", "pass is "+password);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
+        String databasemPinPassword = sharedPreferences.getString(
+                "mPinPassword", "");
+        if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
+            startActivity(new Intent(getContext(),DummyPage.class));
+        }
+        else
+            Toast.makeText(getContext(),"Wrong mPin! Please try again",
+                    Toast.LENGTH_SHORT).show();
+    }
 
     public void takeValue(View v){
 
@@ -270,33 +208,25 @@ public class mPinFragment extends Fragment implements SensorEventListener {
         if(v.getId() == R.id.btn9)
             setValue("9");
         if(v.getId() == R.id.btnclr){
-            counter = 0;
-            btnpin1.setText("");
-            btnpin2.setText("");
-            btnpin3.setText("");
-            btnpin4.setText("");
-            btnpin5.setText("");
-            btnpin6.setText("");
+            clearText();
         }
         if (v.getId() == R.id.btnenter) {
-            counter = 0;
-            String password = temp1+temp2+temp3+ temp4+temp5+temp6;
-            Log.e("passwordd", "pass is "+password);
-
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
-            String databasemPinPassword = sharedPreferences.getString(
-                    "mPinPassword", "");
-            if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
-                startActivity(new Intent(getContext(),DummyPage.class));
-            }
-            else
-                Toast.makeText(getContext(),"Wrong mPin! Please try again",
-                        Toast.LENGTH_SHORT).show();
+            enterField();
 
         }
 
 
     }
+
+    @Override
+    public void onStart() {
+
+        // This function is used if we open device detail or securely logged in
+        //then to clear the text
+        clearText();
+        super.onStart();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -327,18 +257,15 @@ public class mPinFragment extends Fragment implements SensorEventListener {
                 startTime = SystemClock.elapsedRealtime();
 
 
+                if (counter == 5){
+                    enterField();
+                }
+
+
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
 
-                if(v.getId() == R.id.btnclr){
-                    btnpin1.setText("");
-                    btnpin2.setText("");
-                    btnpin3.setText("");
-                    btnpin4.setText("");
-                    btnpin5.setText("");
-                    btnpin6.setText("");
-                }
 
             }
             return true;
@@ -356,5 +283,10 @@ public class mPinFragment extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void fragmentBecameVisible() {
+        clearText();
     }
 }

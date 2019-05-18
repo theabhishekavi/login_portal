@@ -29,6 +29,27 @@ public class HomeActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                PagerInterface fragment = (PagerInterface) adapter.instantiateItem(viewPager, i);
+                if (fragment != null) {
+                    fragment.fragmentBecameVisible();
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
     }
 
     @Override
