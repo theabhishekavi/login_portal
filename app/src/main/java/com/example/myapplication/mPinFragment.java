@@ -183,6 +183,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
             btnpin6.setText("*");
         }
     }
+
     public void clearText(){
         counter = 0;
         btnpin1.setText("");
@@ -192,9 +193,11 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         btnpin5.setText("");
         btnpin6.setText("");
     }
+
     public void enterField(){
         counter = 0;
         String password = temp1+temp2+temp3+ temp4+temp5+temp6;
+        temp1 = ""; temp2 = ""; temp3 ="";temp4 =""; temp5 =""; temp6 ="";
         Log.e("passwordd", "pass is "+password);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
@@ -257,10 +260,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int x = (int)event.getRawX();
                 int y = (int)event.getRawY();
-                Log.e("counterr", "counter is "+counter);
-
                 takeValue(v);
-
                 tvorientation.setText("Orientation x : "+orientationX+" y : "+orientationY
                 +" z : "+orientationZ);
                 float size = event.getSize(0);
@@ -276,71 +276,97 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                 startTime = SystemClock.elapsedRealtime();
 
-                if (counter == 5) {
-                    enterField();
-                }
+//                if (counter == 5) {
+//                    enterField();
+//                }
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
 
-
                 try {
+                    if(v.getId() != R.id.btnenter) {
+                        timeArray.put(difference);
+                        sizeArray.put(size);
+                        xCordinateArray.put(x);
+                        yCordinateArray.put(y);
+                        xOrientationArray.put(orientationX);
+                        yOrientationArray.put(orientationY);
+                        zOrientationArray.put(orientationZ);
 
-                    timeArray.put(difference);
-                    sizeArray.put(size);
-                    xCordinateArray.put(x);
-                    yCordinateArray.put(y);
-                    xOrientationArray.put(orientationX);
-                    yOrientationArray.put(orientationY);
-                    zOrientationArray.put(orientationZ);
+                        cordinateObject.put("x", xCordinateArray);
+                        cordinateObject.put("y", yCordinateArray);
 
-                    cordinateObject.put("x", xCordinateArray);
-                    cordinateObject.put("y", yCordinateArray);
-
-                    orientationObject.put("x",xOrientationArray);
-                    orientationObject.put("y",yOrientationArray);
-                    orientationObject.put("z",zOrientationArray);
-
-
-
-                    dataObject.put("time", timeArray);
-                    dataObject.put("size", sizeArray);
-                    dataObject.put("cordinates", cordinateObject);
-                    dataObject.put("orientation", orientationObject);
-
-                    data.put("data",dataObject);
+                        orientationObject.put("x", xOrientationArray);
+                        orientationObject.put("y", yOrientationArray);
+                        orientationObject.put("z", zOrientationArray);
 
 
-                    final MediaType mediaType = MediaType.parse("application/json");
+                        dataObject.put("time", timeArray);
+                        dataObject.put("size", sizeArray);
+                        dataObject.put("cordinates", cordinateObject);
+                        dataObject.put("orientation", orientationObject);
 
-                    OkHttpClient client = new OkHttpClient();
+                        data.put("data", dataObject);
+                    }
 
-                    RequestBody body = RequestBody.create(mediaType, data.toString());
-                    Request request =
-                            new Request.Builder()
-                                    .url("https://ptsv2.com/t/h5nb4-1558427031/post")
-                                    .post(body)
-                                    .build();
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-//
-                        }
-                    });
+                    if(v.getId() == R.id.btnenter) {
+                        timeArray = new JSONArray();
+                        sizeArray = new JSONArray();
+                        xCordinateArray = new JSONArray();
+                        yCordinateArray = new JSONArray();
+                        xOrientationArray = new JSONArray();
+                        yOrientationArray = new JSONArray();
+                        zOrientationArray = new JSONArray();
 
 
 
+                        clearText();
+
+
+
+                        final MediaType mediaType = MediaType.parse("application/json");
+                        OkHttpClient client = new OkHttpClient();
+                        RequestBody body = RequestBody.create(mediaType, data.toString());
+                        Request request = new Request.Builder()
+                                        .url("https://ptsv2.com/t/h5nb4-1558427031/post")
+                                        .post(body)
+                                        .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                            }
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                            }
+                        });
+
+                        data = new JSONObject();
+                        dataObject = new JSONObject();
+                        cordinateObject = new JSONObject();
+                        orientationObject = new JSONObject();
+
+                    }
+
+                    if (v.getId() == R.id.btnclr){
+                        timeArray = new JSONArray();
+                        sizeArray = new JSONArray();
+                        xCordinateArray = new JSONArray();
+                        yCordinateArray = new JSONArray();
+                        xOrientationArray = new JSONArray();
+                        yOrientationArray = new JSONArray();
+                        zOrientationArray = new JSONArray();
+
+                        data = new JSONObject();
+                        dataObject = new JSONObject();
+                        cordinateObject = new JSONObject();
+                        orientationObject = new JSONObject();
+
+
+                    }
                 }
                 catch (JSONException e){
                     e.printStackTrace();
                 }
-
-
             }
             return true;
         }
