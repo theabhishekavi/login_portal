@@ -26,6 +26,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 public class mPinFragment extends Fragment implements SensorEventListener,PagerInterface {
     int counter = 0,timecounter =0;
@@ -41,6 +55,20 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
     Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
 
     String temp1,temp2,temp3,temp4,temp5,temp6;
+
+
+    JSONObject data = new JSONObject();
+    JSONObject dataObject = new JSONObject();
+    JSONObject cordinateObject = new JSONObject();
+    JSONObject orientationObject = new JSONObject();
+
+    JSONArray timeArray = new JSONArray();
+    JSONArray sizeArray = new JSONArray();
+    JSONArray xCordinateArray = new JSONArray();
+    JSONArray yCordinateArray = new JSONArray();
+    JSONArray xOrientationArray = new JSONArray();
+    JSONArray yOrientationArray = new JSONArray();
+    JSONArray zOrientationArray = new JSONArray();
 
 
     @Nullable
@@ -235,7 +263,8 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                 tvorientation.setText("Orientation x : "+orientationX+" y : "+orientationY
                 +" z : "+orientationZ);
-                area.setText("size is "+event.getSize(0));
+                float size = event.getSize(0);
+                area.setText("size is "+size);
                 cordinates.setText("Cordinates are x:"+x+" and y:"+y);
                 long difference = (SystemClock.elapsedRealtime()-startTime);
                 if(timecounter == 0) {
@@ -247,12 +276,69 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                 startTime = SystemClock.elapsedRealtime();
 
-                if (counter == 5){
+                if (counter == 5) {
                     enterField();
                 }
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
+
+
+                try {
+
+                    timeArray.put(difference);
+                    sizeArray.put(size);
+                    xCordinateArray.put(x);
+                    yCordinateArray.put(y);
+                    xOrientationArray.put(orientationX);
+                    yOrientationArray.put(orientationY);
+                    zOrientationArray.put(orientationZ);
+
+                    cordinateObject.put("x", xCordinateArray);
+                    cordinateObject.put("y", yCordinateArray);
+
+                    orientationObject.put("x",xOrientationArray);
+                    orientationObject.put("y",yOrientationArray);
+                    orientationObject.put("z",zOrientationArray);
+
+
+
+                    dataObject.put("time", timeArray);
+                    dataObject.put("size", sizeArray);
+                    dataObject.put("cordinates", cordinateObject);
+                    dataObject.put("orientation", orientationObject);
+
+                    data.put("data",dataObject);
+
+
+                    final MediaType mediaType = MediaType.parse("application/json");
+
+                    OkHttpClient client = new OkHttpClient();
+
+                    RequestBody body = RequestBody.create(mediaType, data.toString());
+                    Request request =
+                            new Request.Builder()
+                                    .url("https://ptsv2.com/t/h5nb4-1558427031/post")
+                                    .post(body)
+                                    .build();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+//
+                        }
+                    });
+
+
+
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
 
 
             }

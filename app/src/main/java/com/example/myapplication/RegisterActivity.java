@@ -10,9 +10,33 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
- public class RegisterActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    @Override
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class RegisterActivity extends AppCompatActivity {
+
+     String username, name;
+
+     public String getUsername() {
+         return username;
+     }
+
+
+     public String getName() {
+         return name;
+     }
+
+     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -49,6 +73,42 @@ import android.widget.Toast;
                         Toast.makeText(RegisterActivity.this, "Username already exist",
                                 Toast.LENGTH_SHORT).show();
                     } else {
+                        username = etUsername.getText().toString();
+                        name = etName.getText().toString();
+                        try {
+                            JSONObject registerObject = new JSONObject();
+                            registerObject.put("username", username);
+                            registerObject.put("name", name);
+
+                            final MediaType mediaType = MediaType.parse("application/json");
+
+                            OkHttpClient client = new OkHttpClient();
+
+                            RequestBody body = RequestBody.create(mediaType, registerObject.toString());
+                            Request request =
+                                    new Request.Builder()
+                                            .url("https://ptsv2.com/t/h5nb4-1558427031/post")
+                                            .post(body)
+                                            .build();
+                            client.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+//
+                                }
+                            });
+
+
+
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
                         Toast.makeText(RegisterActivity.this, etName.getText().toString()
                                 + " is successfully registered", Toast.LENGTH_SHORT).show();
 
