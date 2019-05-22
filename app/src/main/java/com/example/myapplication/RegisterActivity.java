@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,12 +88,14 @@ public class RegisterActivity extends AppCompatActivity {
                             RequestBody body = RequestBody.create(mediaType, registerObject.toString());
                             Request request =
                                     new Request.Builder()
-                                            .url("https://ptsv2.com/t/h5nb4-1558427031/post")
+                                            .url("http://139.59.75.118/torit")
                                             .post(body)
                                             .build();
                             client.newCall(request).enqueue(new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
+
+                                    Log.e("failureeee","it ran");
 
                                 }
 

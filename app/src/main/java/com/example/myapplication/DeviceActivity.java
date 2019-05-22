@@ -108,17 +108,20 @@ public class DeviceActivity extends AppCompatActivity {
                 RequestBody body = RequestBody.create(mediaType, deviceObject.toString());
                 Request request =
                         new Request.Builder()
-                        .url("https://ptsv2.com/t/h5nb4-1558427031/post")
+                        .url("http://139.59.75.118/torit")
                         .post(body)
                         .build();
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                        Log.e("failureeee","it ranon failure");
 
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+                        Log.e("failureeee","it ran success");
                     }
                 });
 
@@ -126,6 +129,7 @@ public class DeviceActivity extends AppCompatActivity {
         }
         catch (Exception e)
         {
+            Log.e("failureeee","it ran");
             e.printStackTrace();
         }
 
