@@ -383,7 +383,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         orientationX = event.values[0];
         orientationY = event.values[1];
         orientationZ = event.values[2];
-
     }
 
     @Override
