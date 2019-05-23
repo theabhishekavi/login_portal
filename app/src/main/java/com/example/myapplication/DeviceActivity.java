@@ -19,6 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,10 +37,10 @@ public class DeviceActivity extends AppCompatActivity {
 
     TelephonyManager telephonyManager;
     WifiManager wifiManager;
-    private String IMEI, IMSI, SimNo, macAddress,wifiId,model,operatorName;
+    private String IMEI, IMSI, SimNo, macAddress,wifiId,model,operatorName,ipV4;
 
     JSONObject deviceObject = new JSONObject();
-    //        JSONArray deviceArray = new JSONArray();
+
     JSONObject object = new JSONObject();
 
 
@@ -72,9 +76,13 @@ public class DeviceActivity extends AppCompatActivity {
         wifiManager = (WifiManager) DeviceActivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
-        macAddress = wifiInfo.getMacAddress();
+//        macAddress = wifiInfo.getMacAddress();
         wifiId = "";
         wifiId = wifiInfo.getSSID();
+
+        macAddress = getMACAddress("wlan0");
+        //eth0, wlan0 or NULL = use first interface
+        ipV4 = getIPAddress(true);
 
 
 
@@ -84,7 +92,8 @@ public class DeviceActivity extends AppCompatActivity {
                 "\n Operator name is "+operatorName+
                 "\n Mac Address is "+macAddress+
                 "\n Model number is " +model+
-                "\n Wifi Id is " +wifiId);
+                "\n Wifi Id is " +wifiId+
+                "\n IP Address is "+ipV4);
 
         try {
 
@@ -96,8 +105,8 @@ public class DeviceActivity extends AppCompatActivity {
             object.put("MAC",""+macAddress);
             object.put("MODEL",""+model);
             object.put("WIFI",""+wifiId);
+            object.put("IPV4",""+ipV4);
 
-//        deviceArray.put(object);
         deviceObject.put("device_detail",object);
         Log.e("postttobje","object is"+deviceObject.toString());
 
@@ -134,6 +143,53 @@ public class DeviceActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    public static String getMACAddress(String interfaceName) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                if (interfaceName != null) {
+                    if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
+                }
+                byte[] mac = intf.getHardwareAddress();
+                if (mac == null) return "";
+                StringBuilder buf = new StringBuilder();
+                for (byte aMac : mac) buf.append(String.format("%02X:", aMac));
+                if (buf.length() > 0) buf.deleteCharAt(buf.length() - 1);
+                return buf.toString();
+            }
+        } catch (Exception ignored) {
+        } // for now eat exceptions
+        return "";
+    }
+
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { } // for now eat exceptions
+        return "";
     }
 
 
