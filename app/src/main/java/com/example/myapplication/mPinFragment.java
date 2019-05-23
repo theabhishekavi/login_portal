@@ -293,36 +293,33 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         yOrientationArray.put(orientationY);
                         zOrientationArray.put(orientationZ);
 
-                        cordinateObject.put("x", xCordinateArray);
-                        cordinateObject.put("y", yCordinateArray);
-
-                        orientationObject.put("x", xOrientationArray);
-                        orientationObject.put("y", yOrientationArray);
-                        orientationObject.put("z", zOrientationArray);
+//                        cordinateObject.put("x", xCordinateArray);
+//                        cordinateObject.put("y", yCordinateArray);
+//
+//                        orientationObject.put("x", xOrientationArray);
+//                        orientationObject.put("y", yOrientationArray);
+//                        orientationObject.put("z", zOrientationArray);
 
 
                         dataObject.put("time", timeArray);
                         dataObject.put("size", sizeArray);
-                        dataObject.put("cordinates", cordinateObject);
-                        dataObject.put("orientation", orientationObject);
+                        dataObject.put("x cordinates", xCordinateArray);
+                        dataObject.put("y cordinates", yCordinateArray);
+
+                        dataObject.put("x orientation", xOrientationArray);
+                        dataObject.put("y orientation", yOrientationArray);
+                        dataObject.put("z orientation",zOrientationArray);
 
                         data.put("data", dataObject);
                     }
 
                     if(v.getId() == R.id.btnenter) {
-                        timeArray = new JSONArray();
-                        sizeArray = new JSONArray();
-                        xCordinateArray = new JSONArray();
-                        yCordinateArray = new JSONArray();
-                        xOrientationArray = new JSONArray();
-                        yOrientationArray = new JSONArray();
-                        zOrientationArray = new JSONArray();
 
 
 
                         clearText();
 
-
+                        Log.e("mPinnn","orientation enter"+xOrientationArray.toString());
 
                         final MediaType mediaType = MediaType.parse("application/json");
                         OkHttpClient client = new OkHttpClient();
@@ -345,6 +342,14 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         dataObject = new JSONObject();
                         cordinateObject = new JSONObject();
                         orientationObject = new JSONObject();
+
+                        timeArray = new JSONArray();
+                        sizeArray = new JSONArray();
+                        xCordinateArray = new JSONArray();
+                        yCordinateArray = new JSONArray();
+                        xOrientationArray = new JSONArray();
+                        yOrientationArray = new JSONArray();
+                        zOrientationArray = new JSONArray();
 
                     }
 
