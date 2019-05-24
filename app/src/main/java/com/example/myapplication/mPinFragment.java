@@ -11,12 +11,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,6 +60,13 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
     Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
 
     String temp1,temp2,temp3,temp4,temp5,temp6;
+
+    DeviceActivity deviceActivity;
+    String dbUsername, dbName;
+    TelephonyManager telephonyManager;
+    WifiManager wifiManager;
+    String operatorName,IMEI,IMSI,SimNo;
+    String wifiId = "";
 
 
     JSONObject data = new JSONObject();
@@ -153,6 +165,37 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         btnclr.setOnTouchListener(handleTouch);
         btnenter.setOnTouchListener(handleTouch);
 
+        SharedPreferences sharedPreferences = getActivity()
+                .getSharedPreferences("myprefs", Context.MODE_PRIVATE);
+        dbUsername = sharedPreferences.getString(
+                "username", "");
+        dbName = sharedPreferences.getString("name","");
+
+        deviceActivity = new DeviceActivity();
+
+        telephonyManager = (TelephonyManager)getContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        operatorName = telephonyManager.getNetworkOperatorName();
+
+        int permission = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.READ_PHONE_STATE);
+        if(permission == PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                IMEI = telephonyManager.getImei();
+                SimNo = telephonyManager.getSimSerialNumber();
+                IMSI = telephonyManager.getSubscriberId();
+            }
+            else{
+                IMEI = telephonyManager.getDeviceId();
+                SimNo = telephonyManager.getSimSerialNumber();
+                IMSI = telephonyManager.getSubscriberId();
+            }
+        }
+
+        wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+        wifiId = wifiInfo.getSSID();
 
 
     }
@@ -276,9 +319,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                 startTime = SystemClock.elapsedRealtime();
 
-//                if (counter == 5) {
-//                    enterField();
-//                }
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
@@ -299,7 +339,16 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 //                        orientationObject.put("x", xOrientationArray);
 //                        orientationObject.put("y", yOrientationArray);
 //                        orientationObject.put("z", zOrientationArray);
-
+                        dataObject.put("username",dbUsername);
+                        dataObject.put("name",dbName);
+                        dataObject.put("IMEI",IMEI);
+                        dataObject.put("SimNo",SimNo);
+                        dataObject.put("IMSI",IMSI);
+                        dataObject.put("Operator Name",operatorName);
+                        dataObject.put("mac address",deviceActivity.getMACAddress("wlan0"));
+                        dataObject.put("model number",deviceActivity.getModel());
+                        dataObject.put("wifiId",wifiId);
+                        dataObject.put("IPv4",deviceActivity.getIPAddress(true));
 
                         dataObject.put("time", timeArray);
                         dataObject.put("size", sizeArray);
@@ -319,7 +368,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                         clearText();
 
-                        Log.e("mPinnn","orientation enter"+xOrientationArray.toString());
 
                         final MediaType mediaType = MediaType.parse("application/json");
                         OkHttpClient client = new OkHttpClient();

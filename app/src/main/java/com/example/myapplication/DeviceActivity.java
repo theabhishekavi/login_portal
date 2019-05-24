@@ -11,26 +11,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -67,22 +57,21 @@ public class DeviceActivity extends AppCompatActivity {
                 SimNo = telephonyManager.getSimSerialNumber();
                 IMSI = telephonyManager.getSubscriberId();
             }
-
         }
 
-        model = Build.MODEL;
+        model = getModel();
+
+        macAddress = getMACAddress("wlan0"); //eth0, wlan0 or NULL = use first interface
+        ipV4 = getIPAddress(true);
+
 
 
         wifiManager = (WifiManager) DeviceActivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
-//        macAddress = wifiInfo.getMacAddress();
         wifiId = "";
         wifiId = wifiInfo.getSSID();
 
-        macAddress = getMACAddress("wlan0");
-        //eth0, wlan0 or NULL = use first interface
-        ipV4 = getIPAddress(true);
+
 
 
 
@@ -95,58 +84,61 @@ public class DeviceActivity extends AppCompatActivity {
                 "\n Wifi Id is " +wifiId+
                 "\n IP Address is "+ipV4);
 
-        try {
-
-
-            object.put("IMEI", "" + IMEI);
-            object.put("SIM",""+SimNo);
-            object.put("IMSI",""+IMSI);
-            object.put("OPERATOR",""+operatorName);
-            object.put("MAC",""+macAddress);
-            object.put("MODEL",""+model);
-            object.put("WIFI",""+wifiId);
-            object.put("IPV4",""+ipV4);
-
-        deviceObject.put("device_detail",object);
-        Log.e("postttobje","object is"+deviceObject.toString());
-
-          final MediaType mediaType = MediaType.parse("application/json");
-
-            OkHttpClient client = new OkHttpClient();
-
-                RequestBody body = RequestBody.create(mediaType, deviceObject.toString());
-                Request request =
-                        new Request.Builder()
-                        .url("http://139.59.75.118/torit")
-                        .post(body)
-                        .build();
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        e.printStackTrace();
-                        Log.e("failureeee","it ranon failure");
-
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        Log.e("failureeee","it ran success");
-                    }
-                });
-
-
-        }
-        catch (Exception e)
-        {
-            Log.e("failureeee","it ran");
-            e.printStackTrace();
-        }
+//        try {
+//
+//
+//            object.put("IMEI", "" + IMEI);
+//            object.put("SIM",""+SimNo);
+//            object.put("IMSI",""+IMSI);
+//            object.put("OPERATOR",""+operatorName);
+//            object.put("MAC",""+macAddress);
+//            object.put("MODEL",""+model);
+//            object.put("WIFI",""+wifiId);
+//            object.put("IPV4",""+ipV4);
+//
+//        deviceObject.put("device_detail",object);
+//        Log.e("postttobje","object is"+deviceObject.toString());
+//
+//          final MediaType mediaType = MediaType.parse("application/json");
+//
+//            OkHttpClient client = new OkHttpClient();
+//
+//                RequestBody body = RequestBody.create(mediaType, deviceObject.toString());
+//                Request request =
+//                        new Request.Builder()
+//                        .url("http://139.59.75.118/torit")
+//                        .post(body)
+//                        .build();
+//                client.newCall(request).enqueue(new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        e.printStackTrace();
+//                        Log.e("failureeee","it ranon failure");
+//
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        Log.e("failureeee","it ran success");
+//                    }
+//                });
+//
+//
+//        }
+//        catch (Exception e)
+//        {
+//            Log.e("failureeee","it ran");
+//            e.printStackTrace();
+//        }
 
 
     }
 
+    public String getModel(){
+        return Build.MODEL;
+    }
 
-    public static String getMACAddress(String interfaceName) {
+    public  String getMACAddress(String interfaceName) {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
@@ -165,7 +157,7 @@ public class DeviceActivity extends AppCompatActivity {
         return "";
     }
 
-    public static String getIPAddress(boolean useIPv4) {
+    public  String getIPAddress(boolean useIPv4) {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
