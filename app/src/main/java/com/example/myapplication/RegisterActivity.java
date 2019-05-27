@@ -53,43 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Username already exist",
                                 Toast.LENGTH_SHORT).show();
                     } else {
-//                        username = etUsername.getText().toString();
-//                        name = etName.getText().toString();
-//                        try {
-//                            JSONObject registerObject = new JSONObject();
-//                            registerObject.put("username", username);
-//                            registerObject.put("name", name);
-//
-//                            final MediaType mediaType = MediaType.parse("application/json");
-//
-//                            OkHttpClient client = new OkHttpClient();
-//
-//                            RequestBody body = RequestBody.create(mediaType, registerObject.toString());
-//                            Request request =
-//                                    new Request.Builder()
-//                                            .url("http://139.59.75.118/torit")
-//                                            .post(body)
-//                                            .build();
-//                            client.newCall(request).enqueue(new Callback() {
-//                                @Override
-//                                public void onFailure(Call call, IOException e) {
-//
-//                                    Log.e("failureeee","it ran");
-//
-//                                }
-//
-//                                @Override
-//                                public void onResponse(Call call, Response response) throws IOException {
-////
-//                                }
-//                            });
-//
-//
-//
-//                        }
-//                        catch (JSONException e){
-//                            e.printStackTrace();
-//                        }
 
                         Toast.makeText(RegisterActivity.this, etName.getText().toString()
                                 + " is successfully registered", Toast.LENGTH_SHORT).show();

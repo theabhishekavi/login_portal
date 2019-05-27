@@ -47,33 +47,32 @@ import okhttp3.Response;
 
 
 public class mPinFragment extends Fragment implements SensorEventListener,PagerInterface {
-    int counter = 0,timecounter =0;
+
+    int counter = 0;//used for counting the number of clicks
+
+    // used for first time elapsed
+    int timecounter =0;
     long startTime = SystemClock.elapsedRealtime();
+
     TextView timelapse, cordinates, area, tvorientation;
-
-
+    Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
+    String temp1,temp2,temp3,temp4,temp5,temp6;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private float orientationX, orientationY, orientationZ;
-
-    Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
-
-    String temp1,temp2,temp3,temp4,temp5,temp6;
-
-    DeviceActivity deviceActivity;
-    String dbUsername, dbName;
     TelephonyManager telephonyManager;
     WifiManager wifiManager;
+    private float orientationX, orientationY, orientationZ;
     String operatorName,IMEI,IMSI,SimNo;
     String wifiId = "";
 
 
+    // used for accessing data from deviceActivity and RegisterActivity
+    DeviceActivity deviceActivity;
+    String dbUsername, dbName;
+
     JSONObject data = new JSONObject();
     JSONObject dataObject = new JSONObject();
-    JSONObject cordinateObject = new JSONObject();
-    JSONObject orientationObject = new JSONObject();
-
     JSONArray timeArray = new JSONArray();
     JSONArray sizeArray = new JSONArray();
     JSONArray xCordinateArray = new JSONArray();
@@ -194,12 +193,10 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
         wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
         wifiId = wifiInfo.getSSID();
-
-
     }
 
+    //This function is used to set value on the boxes
     public void setValue(String text){
         if (counter == 0) {
             temp1 = text;
@@ -227,6 +224,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         }
     }
 
+    // used for clearing the data from boxes
     public void clearText(){
         counter = 0;
         btnpin1.setText("");
@@ -237,25 +235,11 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         btnpin6.setText("");
     }
 
-    public void enterField(){
-        counter = 0;
-        String password = temp1+temp2+temp3+ temp4+temp5+temp6;
-        temp1 = ""; temp2 = ""; temp3 ="";temp4 =""; temp5 =""; temp6 ="";
-        Log.e("passwordd", "pass is "+password);
 
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
-        String databasemPinPassword = sharedPreferences.getString(
-                "mPinPassword", "");
-        if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
-            startActivity(new Intent(getContext(),DummyPage.class));
-        }
-        else
-            Toast.makeText(getContext(),"Wrong mPin! Please try again",
-                    Toast.LENGTH_SHORT).show();
-    }
 
+
+    // This function is used for taking the input value
     public void takeValue(View v){
-
         if(v.getId() == R.id.btn0)
             setValue("0");
         if(v.getId() == R.id.btn1)
@@ -276,15 +260,22 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
             setValue("8");
         if(v.getId() == R.id.btn9)
             setValue("9");
-        if(v.getId() == R.id.btnclr){
-            clearText();
+    }
+
+    public void enterField(){
+        counter = 0;
+        String password = temp1+temp2+temp3+ temp4+temp5+temp6;
+        temp1 = ""; temp2 = ""; temp3 ="";temp4 =""; temp5 =""; temp6 ="";
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myprefs", Context.MODE_PRIVATE);
+        String databasemPinPassword = sharedPreferences.getString(
+                "mPinPassword", "");
+        if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
+            startActivity(new Intent(getContext(),DummyPage.class));
         }
-        if (v.getId() == R.id.btnenter) {
-            enterField();
-
-        }
-
-
+        else
+            Toast.makeText(getContext(),"Wrong mPin! Please try again",
+                    Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -297,6 +288,8 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
     }
 
 
+
+    // it handles all the touch actions
     View.OnTouchListener handleTouch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -304,8 +297,10 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                 int x = (int)event.getRawX();
                 int y = (int)event.getRawY();
                 takeValue(v);
-                tvorientation.setText("Orientation x : "+orientationX+" y : "+orientationY
-                +" z : "+orientationZ);
+                tvorientation.setText("Orientation x : "
+                        +orientationX+
+                        " y : "+orientationY +
+                        " z : "+orientationZ);
                 float size = event.getSize(0);
                 area.setText("size is "+size);
                 cordinates.setText("Cordinates are x:"+x+" and y:"+y);
@@ -314,11 +309,11 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                     timelapse.setText("Time counter started");
                     timecounter++;
                 }
-                else
-                    timelapse.setText("Time elapsed "+difference+" milliseconds");
+                else {
+                    timelapse.setText("Time elapsed " + difference + " milliseconds");
+                }
 
                 startTime = SystemClock.elapsedRealtime();
-
 
                 if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
                 counter++;
@@ -333,12 +328,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         yOrientationArray.put(orientationY);
                         zOrientationArray.put(orientationZ);
 
-//                        cordinateObject.put("x", xCordinateArray);
-//                        cordinateObject.put("y", yCordinateArray);
-//
-//                        orientationObject.put("x", xOrientationArray);
-//                        orientationObject.put("y", yOrientationArray);
-//                        orientationObject.put("z", zOrientationArray);
                         dataObject.put("username",dbUsername);
                         dataObject.put("name",dbName);
                         dataObject.put("IMEI",IMEI);
@@ -363,12 +352,8 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                     }
 
                     if(v.getId() == R.id.btnenter) {
-
-
-
                         clearText();
-
-
+                        enterField();
                         final MediaType mediaType = MediaType.parse("application/json");
                         OkHttpClient client = new OkHttpClient();
                         RequestBody body = RequestBody.create(mediaType, data.toString());
@@ -379,7 +364,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         client.newCall(request).enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                Log.e("failureeee","it ran");
                             }
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
@@ -388,9 +372,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                         data = new JSONObject();
                         dataObject = new JSONObject();
-                        cordinateObject = new JSONObject();
-                        orientationObject = new JSONObject();
-
                         timeArray = new JSONArray();
                         sizeArray = new JSONArray();
                         xCordinateArray = new JSONArray();
@@ -402,6 +383,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                     }
 
                     if (v.getId() == R.id.btnclr){
+                        clearText();
                         timeArray = new JSONArray();
                         sizeArray = new JSONArray();
                         xCordinateArray = new JSONArray();
@@ -412,8 +394,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                         data = new JSONObject();
                         dataObject = new JSONObject();
-                        cordinateObject = new JSONObject();
-                        orientationObject = new JSONObject();
 
 
                     }
