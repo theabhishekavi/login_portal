@@ -379,7 +379,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         xOrientationArray = new JSONArray();
                         yOrientationArray = new JSONArray();
                         zOrientationArray = new JSONArray();
-
                     }
 
                     if (v.getId() == R.id.btnclr){
