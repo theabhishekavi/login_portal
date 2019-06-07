@@ -15,6 +15,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,11 +51,11 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
     int counter = 0;//used for counting the number of clicks
 
-    // used for first time elapsed
-    int timecounter =0;
+//    // used for first time elapsed
+//    int timecounter =0;
     long startTime = SystemClock.elapsedRealtime();
 
-    TextView timelapse, cordinates, area, tvorientation;
+//    TextView timelapse, cordinates, area, tvorientation;
     Button btnpin1,btnpin2,btnpin3,btnpin4,btnpin5,btnpin6;
     String temp1,temp2,temp3,temp4,temp5,temp6;
 
@@ -113,10 +114,10 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
         final TextView tvNewUser = getView().findViewById(R.id.tvNewUser);
 
-        area = getView().findViewById(R.id.area);
-        timelapse = getView().findViewById(R.id.timelapse);
-        cordinates = getView().findViewById(R.id.cordinates);
-        tvorientation = getView().findViewById(R.id.orientation);
+//        area = getView().findViewById(R.id.area);
+//        timelapse = getView().findViewById(R.id.timelapse);
+//        cordinates = getView().findViewById(R.id.cordinates);
+//        tvorientation = getView().findViewById(R.id.orientation);
 
         tvNewUser.setPaintFlags(tvNewUser.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
@@ -198,33 +199,33 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
     //This function is used to set value on the boxes
     public void setValue(String text){
-        if (counter == 0) {
+        if (counter == 1) {
             temp1 = text;
             btnpin1.setText("*");
         }
-        if (counter == 1){
+        if (counter == 2){
             temp2 = text;
             btnpin2.setText("*");
         }
-        if (counter == 2){
+        if (counter == 3){
             temp3 = text;
             btnpin3.setText("*");
         }
-        if (counter == 3){
+        if (counter == 4){
             temp4 =text;
             btnpin4.setText("*");
         }
-        if (counter == 4) {
+        if (counter == 5) {
             temp5 = text;
             btnpin5.setText("*");
         }
-        if (counter == 5){
+        if (counter == 6){
             temp6 = text;
             btnpin6.setText("*");
         }
     }
 
-    // used for clearing the data from boxes
+    // used for clearing the data from boxes and from json arrays
     public void clearText(){
         counter = 0;
         btnpin1.setText("");
@@ -233,6 +234,16 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         btnpin4.setText("");
         btnpin5.setText("");
         btnpin6.setText("");
+
+        timeArray = new JSONArray();
+        sizeArray = new JSONArray();
+        xCordinateArray = new JSONArray();
+        yCordinateArray = new JSONArray();
+        xOrientationArray = new JSONArray();
+        yOrientationArray = new JSONArray();
+        zOrientationArray = new JSONArray();
+        data = new JSONObject();
+        dataObject = new JSONObject();
     }
 
 
@@ -263,7 +274,6 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
     }
 
     public void enterField(){
-        counter = 0;
         String password = temp1+temp2+temp3+ temp4+temp5+temp6;
         temp1 = ""; temp2 = ""; temp3 ="";temp4 =""; temp5 =""; temp6 ="";
 
@@ -273,14 +283,22 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         if (!(password.isEmpty()) && databasemPinPassword.equals(password)){
             startActivity(new Intent(getContext(),DummyPage.class));
         }
-        else
-            Toast.makeText(getContext(),"Wrong mPin! Please try again",
+        else {
+            Toast.makeText(getContext(), "Wrong mPin! Please try again",
                     Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    clearText();
+                }
+            },500);
+
+        }
     }
 
     @Override
     public void onStart() {
-
         // This function is used if we open device detail or securely logged in
         //then to clear the text
         clearText();
@@ -294,32 +312,30 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                int x = (int)event.getRawX();
-                int y = (int)event.getRawY();
-                takeValue(v);
-                tvorientation.setText("Orientation x : "
-                        +orientationX+
-                        " y : "+orientationY +
-                        " z : "+orientationZ);
-                float size = event.getSize(0);
-                area.setText("size is "+size);
-                cordinates.setText("Cordinates are x:"+x+" and y:"+y);
-                long difference = (SystemClock.elapsedRealtime()-startTime);
-                if(timecounter == 0) {
-                    timelapse.setText("Time counter started");
-                    timecounter++;
-                }
-                else {
-                    timelapse.setText("Time elapsed " + difference + " milliseconds");
-                }
+                if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter) {
+                    counter = counter + 1;
+                    int x = (int) event.getRawX();
+                    int y = (int) event.getRawY();
 
-                startTime = SystemClock.elapsedRealtime();
+                    takeValue(v);
+//                tvorientation.setText("Orientation x : "
+//                        +orientationX+
+//                        " y : "+orientationY +
+//                        " z : "+orientationZ);
+                    float size = event.getSize(0);
+//                area.setText("size is "+size);
+//                cordinates.setText("Cordinates are x:"+x+" and y:"+y);
+                    long difference = (SystemClock.elapsedRealtime() - startTime);
+//                if(timecounter == 0) {
+////                    timelapse.setText("Time counter started");
+//                    timecounter++;
+//                }
+//                else {
+////                    timelapse.setText("Time elapsed " + difference + " milliseconds");
+//                }
+                    startTime = SystemClock.elapsedRealtime();
 
-                if(v.getId()!= R.id.btnclr && v.getId()!= R.id.btnenter)
-                counter++;
-
-                try {
-                    if(v.getId() != R.id.btnenter) {
+                    try {
                         timeArray.put(difference);
                         sizeArray.put(size);
                         xCordinateArray.put(x);
@@ -327,17 +343,16 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         xOrientationArray.put(orientationX);
                         yOrientationArray.put(orientationY);
                         zOrientationArray.put(orientationZ);
-
-                        dataObject.put("username",dbUsername);
-                        dataObject.put("name",dbName);
-                        dataObject.put("IMEI",IMEI);
-                        dataObject.put("SimNo",SimNo);
-                        dataObject.put("IMSI",IMSI);
-                        dataObject.put("Operator Name",operatorName);
-                        dataObject.put("mac address",deviceActivity.getMACAddress("wlan0"));
-                        dataObject.put("model number",deviceActivity.getModel());
-                        dataObject.put("wifiId",wifiId);
-                        dataObject.put("IPv4",deviceActivity.getIPAddress(true));
+                        dataObject.put("username", dbUsername);
+                        dataObject.put("name", dbName);
+                        dataObject.put("IMEI", IMEI);
+                        dataObject.put("SimNo", SimNo);
+                        dataObject.put("IMSI", IMSI);
+                        dataObject.put("Operator Name", operatorName);
+                        dataObject.put("mac address", deviceActivity.getMACAddress("wlan0"));
+                        dataObject.put("model number", deviceActivity.getModel());
+                        dataObject.put("wifiId", wifiId);
+                        dataObject.put("IPv4", deviceActivity.getIPAddress(true));
 
                         dataObject.put("time", timeArray);
                         dataObject.put("size", sizeArray);
@@ -346,64 +361,59 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
                         dataObject.put("x orientation", xOrientationArray);
                         dataObject.put("y orientation", yOrientationArray);
-                        dataObject.put("z orientation",zOrientationArray);
+                        dataObject.put("z orientation", zOrientationArray);
 
                         data.put("data", dataObject);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                    if(v.getId() == R.id.btnenter) {
-                        clearText();
+                    if (counter == 6) {
+                        postToServer();
                         enterField();
-                        final MediaType mediaType = MediaType.parse("application/json");
-                        OkHttpClient client = new OkHttpClient();
-                        RequestBody body = RequestBody.create(mediaType, data.toString());
-                        Request request = new Request.Builder()
-                                        .url("http://139.59.75.118/torit")
-                                        .post(body)
-                                        .build();
-                        client.newCall(request).enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                            }
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                            }
-                        });
-
-                        data = new JSONObject();
-                        dataObject = new JSONObject();
-                        timeArray = new JSONArray();
-                        sizeArray = new JSONArray();
-                        xCordinateArray = new JSONArray();
-                        yCordinateArray = new JSONArray();
-                        xOrientationArray = new JSONArray();
-                        yOrientationArray = new JSONArray();
-                        zOrientationArray = new JSONArray();
-                    }
-
-                    if (v.getId() == R.id.btnclr){
-                        clearText();
-                        timeArray = new JSONArray();
-                        sizeArray = new JSONArray();
-                        xCordinateArray = new JSONArray();
-                        yCordinateArray = new JSONArray();
-                        xOrientationArray = new JSONArray();
-                        yOrientationArray = new JSONArray();
-                        zOrientationArray = new JSONArray();
-
-                        data = new JSONObject();
-                        dataObject = new JSONObject();
-
 
                     }
+
+//                    if(v.getId() == R.id.btnenter) {
+//                        enterField();
+//                        postToServer();
+//                    }
+
                 }
-                catch (JSONException e){
-                    e.printStackTrace();
+                if (v.getId() == R.id.btnclr) {
+                    clearText();
                 }
             }
             return true;
         }
     };
+    public void postToServer(){
+        final MediaType mediaType = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(mediaType, data.toString());
+        Request request = new Request.Builder()
+                .url("http://139.59.75.118/logInAuth")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+            }
+        });
+
+        data = new JSONObject();
+        dataObject = new JSONObject();
+        timeArray = new JSONArray();
+        sizeArray = new JSONArray();
+        xCordinateArray = new JSONArray();
+        yCordinateArray = new JSONArray();
+        xOrientationArray = new JSONArray();
+        yOrientationArray = new JSONArray();
+        zOrientationArray = new JSONArray();
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
