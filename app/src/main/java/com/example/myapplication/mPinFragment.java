@@ -37,6 +37,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -69,7 +73,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
 
 
     // used for accessing data from deviceActivity and RegisterActivity
-    DeviceActivity deviceActivity;
+//    DeviceActivity deviceActivity;
     String dbUsername, dbName;
 
     JSONObject data = new JSONObject();
@@ -171,7 +175,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                 "username", "");
         dbName = sharedPreferences.getString("name","");
 
-        deviceActivity = new DeviceActivity();
+//        deviceActivity = new DeviceActivity();
 
         telephonyManager = (TelephonyManager)getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
@@ -348,20 +352,20 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
                         dataObject.put("IMEI", IMEI);
                         dataObject.put("SimNo", SimNo);
                         dataObject.put("IMSI", IMSI);
-                        dataObject.put("Operator Name", operatorName);
-                        dataObject.put("mac address", deviceActivity.getMACAddress("wlan0"));
-                        dataObject.put("model number", deviceActivity.getModel());
+                        dataObject.put("OperatorName", operatorName);
+                        dataObject.put("macAddress", getMACAddress("wlan0"));
+                        dataObject.put("modelNumber", getModel());
                         dataObject.put("wifiId", wifiId);
-                        dataObject.put("IPv4", deviceActivity.getIPAddress(true));
+                        dataObject.put("IPv4", getIPAddress(true));
 
                         dataObject.put("time", timeArray);
                         dataObject.put("size", sizeArray);
-                        dataObject.put("x cordinates", xCordinateArray);
-                        dataObject.put("y cordinates", yCordinateArray);
+                        dataObject.put("xCordinates", xCordinateArray);
+                        dataObject.put("yCordinates", yCordinateArray);
 
-                        dataObject.put("x orientation", xOrientationArray);
-                        dataObject.put("y orientation", yOrientationArray);
-                        dataObject.put("z orientation", zOrientationArray);
+                        dataObject.put("xOrientation", xOrientationArray);
+                        dataObject.put("yOrientation", yOrientationArray);
+                        dataObject.put("zOrientation", zOrientationArray);
 
                         data.put("data", dataObject);
                     } catch (JSONException e) {
@@ -413,6 +417,56 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
         xOrientationArray = new JSONArray();
         yOrientationArray = new JSONArray();
         zOrientationArray = new JSONArray();
+    }
+
+    public  String getMACAddress(String interfaceName) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                if (interfaceName != null) {
+                    if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
+                }
+                byte[] mac = intf.getHardwareAddress();
+                if (mac == null) return "";
+                StringBuilder buf = new StringBuilder();
+                for (byte aMac : mac) buf.append(String.format("%02X:", aMac));
+                if (buf.length() > 0) buf.deleteCharAt(buf.length() - 1);
+                return buf.toString();
+            }
+        } catch (Exception ignored) {
+        }
+        return "";
+    }
+
+    public  String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { }
+        return "";
+    }
+
+    public String getModel(){
+        return Build.MODEL;
     }
 
     @Override
