@@ -38,15 +38,17 @@ public class DummyPage extends AppCompatActivity {
         imageViewAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accountListPojos.add(new AccountListPojo("hii"));
-                adapter = new AccountListAdapter(accountListPojos);
-                Log.e("counterr","count is"+adapter.getItemCount());
-                if(adapter.getItemCount()<=3)
-                recyclerViewFirst.setAdapter(adapter);
-                if (adapter.getItemCount()== 3)
-                    accountListPojos.remove(1);
-                if (adapter.getItemCount()>3)
-                    recyclerViewSecond.setAdapter(adapter);
+                BankDetailsDialog bankDetailsDialog = new BankDetailsDialog(DummyPage.this);
+                bankDetailsDialog.show();
+//                accountListPojos.add(new AccountListPojo("hii"));
+//                adapter = new AccountListAdapter(accountListPojos);
+//                Log.e("counterr","count is"+adapter.getItemCount());
+//                if(adapter.getItemCount()<=3)
+//                recyclerViewFirst.setAdapter(adapter);
+//                if (adapter.getItemCount()== 3)
+//                    accountListPojos.remove(1);
+//                if (adapter.getItemCount()>3)
+//                    recyclerViewSecond.setAdapter(adapter);
             }
         });
 

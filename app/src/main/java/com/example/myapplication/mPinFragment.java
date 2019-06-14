@@ -391,7 +391,7 @@ public class mPinFragment extends Fragment implements SensorEventListener,PagerI
             return true;
         }
     };
-    public void postToServer(){
+    private void postToServer(){
         final MediaType mediaType = MediaType.parse("application/json");
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(mediaType, data.toString());
