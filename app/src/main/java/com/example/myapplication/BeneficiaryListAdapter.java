@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class AccountListAdapter extends RecyclerView.Adapter
-        <AccountListAdapter.AccountListHolder> {
+public class BeneficiaryListAdapter extends RecyclerView.Adapter
+        <BeneficiaryListAdapter.AccountListHolder> {
 
-    private ArrayList<AccountListPojo> accountListPojos;
+    private ArrayList<BeneficiaryClass> arrayListBeneficary;
 
-    public AccountListAdapter(ArrayList<AccountListPojo> accountListPojos) {
-        this.accountListPojos = accountListPojos;
+    public BeneficiaryListAdapter(ArrayList<BeneficiaryClass> arrayListBeneficary) {
+        this.arrayListBeneficary = arrayListBeneficary;
     }
 
     @NonNull
@@ -29,13 +29,13 @@ public class AccountListAdapter extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(@NonNull AccountListHolder accountListHolder, int position) {
-        final AccountListPojo currentAccount = accountListPojos.get(position);
+        final BeneficiaryClass currentAccount = arrayListBeneficary.get(position);
         accountListHolder.name.setText(currentAccount.getName());
     }
 
     @Override
     public int getItemCount() {
-        return accountListPojos.size();
+        return arrayListBeneficary.size();
     }
 
     class AccountListHolder extends RecyclerView.ViewHolder
