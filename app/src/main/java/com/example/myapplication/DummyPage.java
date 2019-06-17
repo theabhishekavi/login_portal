@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 public class DummyPage extends AppCompatActivity {
-    ArrayList<BeneficiaryClass> beneficiaryClasses = new ArrayList<>();
-    BeneficiaryListAdapter adapter;
+    ArrayList<BeneficiaryClass> beneficiaryClasses1 = new ArrayList<>();
+    ArrayList<BeneficiaryClass> beneficiaryClasses2 = new ArrayList<>();
+    BeneficiaryListAdapter adapter1;
+    BeneficiaryListAdapter adapter2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,12 +24,21 @@ public class DummyPage extends AppCompatActivity {
         ImageView imageViewAddNew = findViewById(R.id.image_addNew);
         final RecyclerView recyclerViewFirst = findViewById(R.id.recyclerViewFirst);
         final RecyclerView recyclerViewSecond = findViewById(R.id.recyclerViewSecond);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),4);
-        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        GridLayoutManager gridLayoutManager1 = new GridLayoutManager(getApplicationContext(),3);
+        gridLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
         GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getApplicationContext(),4);
         gridLayoutManager2.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerViewFirst.setLayoutManager(gridLayoutManager);
+        recyclerViewFirst.setLayoutManager(gridLayoutManager1);
         recyclerViewSecond.setLayoutManager(gridLayoutManager2);
+        beneficiaryClasses1.add(new BeneficiaryClass("Abhishek"));
+        beneficiaryClasses1.add(new BeneficiaryClass("Aman"));
+        beneficiaryClasses1.add(new BeneficiaryClass("Anurag"));
+        beneficiaryClasses2.add(new BeneficiaryClass("Suman"));
+        beneficiaryClasses2.add(new BeneficiaryClass("Kuddus"));
+        adapter1 = new BeneficiaryListAdapter(beneficiaryClasses1);
+        adapter2 = new BeneficiaryListAdapter(beneficiaryClasses2);
+        recyclerViewFirst.setAdapter(adapter1);
+        recyclerViewSecond.setAdapter(adapter2);
 
         imageViewAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,13 +47,13 @@ public class DummyPage extends AppCompatActivity {
                 bankDetailsDialog.show();
 
 
-//                 beneficiaryClasses.add(new BeneficiaryClass("hii"));
-//                adapter = new BeneficiaryListAdapter(beneficiaryClasses);
+//                beneficiaryClasses1.add(new BeneficiaryClass("hii"));
+//                adapter = new BeneficiaryListAdapter(beneficiaryClasses1);
 //                Log.e("counterr","count is"+adapter.getItemCount());
 //                if(adapter.getItemCount()<=3)
 //                recyclerViewFirst.setAdapter(adapter);
 //                if (adapter.getItemCount()== 3)
-//                    beneficiaryClasses.remove(1);
+//                    beneficiaryClasses1.remove(1);
 //                if (adapter.getItemCount()>3)
 //                    recyclerViewSecond.setAdapter(adapter);
             }

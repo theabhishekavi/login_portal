@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class BeneficiaryListAdapter extends RecyclerView.Adapter
     @Override
     public AccountListHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater li = LayoutInflater.from(viewGroup.getContext());
-        View inflatedView = li.inflate(R.layout.accountlist_adapter,
+        View inflatedView = li.inflate(R.layout.beneficaryList_adapter,
                 viewGroup,false);
         return new AccountListHolder(inflatedView);
     }
@@ -41,9 +42,11 @@ public class BeneficiaryListAdapter extends RecyclerView.Adapter
     class AccountListHolder extends RecyclerView.ViewHolder
     {
         TextView name;
+        ImageView image;
         public AccountListHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.tvAccountList);
+            image = itemView.findViewById(R.id.ivAccountList);
         }
     }
 }
